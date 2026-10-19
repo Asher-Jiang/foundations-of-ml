@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 from torch.distributions import StudentT
+from pathlib import Path
 
 
 
@@ -80,7 +81,7 @@ def train_t_dist(dataset, step_count=200):
 if __name__=="__main__":
 
     # Load data and 80-20 split
-    data = torch.tensor(np.genfromtxt("homework_1/ale_dataset.csv", delimiter=",", skip_header=1), dtype=torch.float32)
+    data = torch.tensor(np.genfromtxt(Path(__file__).resolve().parent / "ale_dataset.csv", delimiter=",", skip_header=1), dtype=torch.float32)
     X, y = data[:, 0:4], data[:, 4]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
@@ -100,7 +101,7 @@ if __name__=="__main__":
 
     # My t-dist regression
     dataset = TensorDataset(X_train_s, y_train)
-    w_t, b_t = train_linreg(dataset)
+    w_t, b_t = train_t_dist(dataset)
     predictions = predict_linreg(w_t, b_t, X_test_s)
     mae_linreg = eval_accuracy(predictions, y_test)
     print(f"MAE of my t-dist regression model: {mae_linreg}")
